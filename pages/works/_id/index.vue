@@ -12,7 +12,7 @@
     />
     <!-- サイドメニュー -->
     <div
-      v-if="getUser.id === work.user.id"
+      v-if="getUser && getUser.id === work.user.id"
       class="z-30 absolute -right-20 top-0"
     >
       <!-- 編集 -->

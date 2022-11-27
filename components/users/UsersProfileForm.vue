@@ -97,7 +97,7 @@ export default class UsersProfileForm extends Vue {
   }
 
   putUserInfo() {
-    AxiosClient.client('PUT', '/users/@me', true, {
+    AxiosClient.client('PUT', '/users/@me', {
       display_name: this.displayName,
       avatar_url: this.avatarUrl,
       profile: this.profile,
@@ -117,10 +117,6 @@ export default class UsersProfileForm extends Vue {
 
   closeEditProfileModal() {
     this.$emit('close-edit-profile-modal')
-  }
-
-  get accessToken() {
-    return authStore.getAccessToken
   }
 }
 </script>

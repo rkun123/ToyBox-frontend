@@ -190,7 +190,6 @@ export default class WorksForm extends Vue {
           AxiosClient.client(
             'POST',
             `/works?post_discord=${this.shareDiscord}`,
-            true,
             this.workData
           )
             .then((result) => {
@@ -204,7 +203,6 @@ export default class WorksForm extends Vue {
           AxiosClient.client(
             'PUT',
             `/works/${this.$route.params.id}`,
-            true,
             this.workData
           )
             .then((result) => {

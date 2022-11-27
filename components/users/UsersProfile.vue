@@ -111,7 +111,7 @@ export default class UsersProfile extends Vue {
   }
 
   enabledEditButtonStatus() {
-    return this.getUser.id === this.user.id
+    return this.getUser && this.getUser.id === this.user.id
   }
 }
 </script>

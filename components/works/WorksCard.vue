@@ -22,7 +22,7 @@
     />
     <div class="z-50 absolute right-3 top-3">
       <base-icon-button
-        v-if="getUser.id === workData.user.id"
+        v-if="getUser && getUser.id === workData.user.id"
         :size="'small'"
         :font-awesome="{ type: 'fas', name: 'pen' }"
         @click="$router.push(`/works/${workData.id}/edit`)"

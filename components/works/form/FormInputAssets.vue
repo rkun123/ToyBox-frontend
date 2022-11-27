@@ -83,7 +83,6 @@ export default class FormInputAssets extends Vue {
             AxiosClient.client(
               'POST',
               '/assets',
-              true,
               params,
               'multipart/form-data'
             ).then((result) => {

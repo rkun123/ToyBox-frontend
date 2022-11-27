@@ -159,10 +159,6 @@ export default class TagSelecter extends Vue {
     return authStore.nowLogin
   }
 
-  get getAccessToken() {
-    return authStore.getAccessToken
-  }
-
   created() {
     this.searchTags()
   }
@@ -265,8 +261,7 @@ export default class TagSelecter extends Vue {
       try {
         AxiosClient.client(
           'GET',
-          `${process.env.API_URL}/tags?w=${this.searchTagKeyword}`,
-          false
+          `${process.env.API_URL}/tags?w=${this.searchTagKeyword}`
         ).then((result) => {
           if (this.getSelectedTags.length > 0) {
             this.suggestTags = result.data.filter((item: GetTag) => {
@@ -383,7 +378,7 @@ export default class TagSelecter extends Vue {
 
   createNewTag() {
     try {
-      AxiosClient.client('POST', `${process.env.API_URL}/tags`, true, {
+      AxiosClient.client('POST', `${process.env.API_URL}/tags`, {
         name: this.searchTagKeyword,
         color: '#ffffff'
       }).then((result) => {

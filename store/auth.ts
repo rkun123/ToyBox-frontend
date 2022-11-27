@@ -17,36 +17,19 @@ axios.defaults.baseURL = process.env.API_URL
   namespaced: true
 })
 export default class Auth extends VuexModule {
-  private user: User = {
-    id: '',
-    name: '',
-    display_name: '',
-    created_at: '',
-    updated_at: ''
-  }
+  private user: User | null = null
 
-  private accessToken: string = ''
-
-  public get getUser(): User {
+  public get getUser(): User | null {
     return this.user
   }
 
   public get nowLogin(): Boolean {
-    return this.user.id !== ''
-  }
-
-  public get getAccessToken(): String {
-    return this.accessToken
+    return this.user !== null
   }
 
   @Mutation
-  setUser(user: User) {
+  setUser(user: User | null) {
     this.user = user
-  }
-
-  @Mutation
-  setAccessToken(accessToken: string) {
-    this.accessToken = accessToken
   }
 
   @Action
@@ -56,74 +39,23 @@ export default class Auth extends VuexModule {
   }
 
   @Action
-  public newLoginSetAccessToken(accessToken: string) {
-    this.setAccessToken(accessToken)
-  }
-
-  @Action
   public async authAgain() {
-    await this.getAccessTokenByRefreshToken()
+    await this.authDiscord()
     await this.fetchUser()
   }
 
   @Action
-  public fetchUser(accessToken?: string): Promise<void> {
-    const token = accessToken || this.accessToken
-    return new Promise(async (resolve, reject) => {
-      await axios
-        .get('/users/@me', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then((result: any) => {
-          this.setUser(result.data)
-          resolve()
-        })
-        .catch(() => {
-          // access_tokenが失効してしまった場合
-          this.getAccessTokenByRefreshToken()
-            .then(() => {
-              this.fetchUser()
-              resolve()
-            })
-            .catch((error) => {
-              console.error(error)
-              reject(error)
-            })
-        })
-    })
+  public async fetchUser(): Promise<void> {
+    try {
+      const res = await axios.get('/users/@me')
+      this.setUser(res.data)
+    } catch (e: unknown) {
+      this.setUser(null)
+    }
   }
 
   @Action
-  private getAccessTokenByRefreshToken(refreshToken?: string): Promise<void> {
-    const token = refreshToken || String(localStorage.getItem('refresh_token'))
-    return new Promise(async (resolve, reject) => {
-      await axios
-        .post('/auth/token', {
-          refresh_token: token
-        })
-        .then((result) => {
-          this.setAccessToken(result.data.access_token)
-          localStorage.setItem('refresh_token', result.data.refresh_token)
-          resolve()
-        })
-        .catch((error) => {
-          console.error(error)
-          localStorage.removeItem('refresh_token')
-          localStorage.removeItem('toybox-auth')
-          this.setAccessToken('')
-          this.setUser({
-            id: '',
-            name: '',
-            display_name: '',
-            created_at: '',
-            updated_at: ''
-          })
-          alert('ログイン認証に失敗しました。もう一度ログインしてください。')
-          reject(error)
-          location.reload
-        })
-    })
+  public async logout(): Promise<void> {
+    await axios.post('/api/v1/auth/logout')
   }
 }

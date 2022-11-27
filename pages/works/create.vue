@@ -7,13 +7,17 @@ import { Component, mixins } from 'nuxt-property-decorator'
 import WorksForm from '@/components/works/WorksForm.vue'
 import { PostWork } from '@/types'
 import BlockUnloadMixin from '~/mixins/BlockUnloadMixin'
-import { tagSelectorStore, workPostStore, workFilterStore } from '~/store'
+import {
+  tagSelectorStore,
+  workPostStore,
+  workFilterStore,
+  authStore
+} from '~/store'
 
 @Component({
   components: {
     WorksForm
-  },
-  middleware: 'auth_check'
+  }
 })
 export default class Create extends mixins(BlockUnloadMixin) {
   workData: PostWork = {
@@ -29,6 +33,10 @@ export default class Create extends mixins(BlockUnloadMixin) {
   beforeCreate() {
     tagSelectorStore.initSelectedTags()
     workFilterStore.deleteFilterVisibility()
+    if (!authStore.getUser) {
+      // ログインしていないため、トップに遷移
+      this.$router.push('/')
+    }
   }
 
   created() {

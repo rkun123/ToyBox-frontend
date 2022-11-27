@@ -195,15 +195,15 @@ export default class Header extends Vue {
   }
 
   get getIcon() {
-    return authStore.getUser.avatar_url
+    return authStore.getUser!.avatar_url
   }
 
   get getName() {
-    return authStore.getUser.name
+    return authStore.getUser!.name
   }
 
   get getUserId() {
-    return authStore.getUser.id
+    return authStore.getUser!.id
   }
 
   toDraftPage() {
@@ -217,16 +217,7 @@ export default class Header extends Vue {
   }
 
   clickLogout() {
-    authStore.setUser({
-      id: '',
-      name: '',
-      display_name: '',
-      created_at: '',
-      updated_at: ''
-    })
-    authStore.setAccessToken('')
-    localStorage.removeItem('refresh_token')
-    localStorage.removeItem('toybox-auth')
+    authStore.logout()
     if (this.$route.path === '/') {
       location.reload()
     } else {

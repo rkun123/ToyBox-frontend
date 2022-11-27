@@ -92,7 +92,6 @@ export default class FormInputThumbnail extends Vue {
             AxiosClient.client(
               'POST',
               '/assets',
-              true,
               params,
               'multipart/form-data'
             ).then((result) => {
